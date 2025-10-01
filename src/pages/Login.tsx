@@ -3,9 +3,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginSchema } from "../schemas/loginSchema";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
@@ -20,6 +22,7 @@ export default function Login() {
     setErrorMessage(null); // limpa erro anterior
     try {
       await login(data.email, data.password);
+      navigate("/"); // redireciona ao logar
     } catch (err) {
       setErrorMessage("Email ou senha inválidos."); // msg simples (ou pode vir da API)
     }

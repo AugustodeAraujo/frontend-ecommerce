@@ -1,9 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { IconShoppingCart } from "@tabler/icons-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <nav className='w-full flex justify-between p-4 bg-slate-800'>
@@ -16,7 +22,10 @@ export default function Navbar() {
           <Link to='/cart' className='relative'>
             <IconShoppingCart className='text-white' />
           </Link>
-          <button onClick={logout} className='text-red-600 text-xs py-1 px-2'>
+          <button
+            onClick={handleLogout}
+            className='text-red-600 text-xs py-1 px-2'
+          >
             Sair
           </button>
         </div>
