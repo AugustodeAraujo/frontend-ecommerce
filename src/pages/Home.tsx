@@ -1,9 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { productService, type PaginatedResponse } from "@/api/productService";
 import { cartService } from "@/api/cartService";
 import type { Product } from "@/models/Product";
@@ -12,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { IconSearch } from "@tabler/icons-react";
+import { Hero } from "@/components/Hero";
 
 const currencyFormatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -25,7 +22,9 @@ export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [feedback, setFeedback] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
-  const [addingProductIds, setAddingProductIds] = useState<Record<string, true>>({});
+  const [addingProductIds, setAddingProductIds] = useState<
+    Record<string, true>
+  >({});
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -114,21 +113,31 @@ export default function Home() {
 
   return (
     <>
-      <h1 className='text-center text-2xl font-bold my-8'>Mini E-commerce</h1>
+      <Hero
+        image={{
+          src: "https://images.pexels.com/photos/209652/pexels-photo-209652.jpeg",
+          alt: "",
+        }}
+      />
       <Container>
-        <form onSubmit={handleSearch} className='mb-4 flex'>
+        <form onSubmit={handleSearch} className='flex items-center -mt-7 mb-4'>
           <Input
             type='text'
             name='q'
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder='Buscar produto...'
-            className='border px-8 py-10 rounded-l-full'
+            placeholder='Buscar por peça, modelo, carro, placa...'
+            className='px-8 h-14 rounded-l-full bg-gray-50 shadow border border-gray-200
+               focus:outline-none focus:border-gray-300 focus:ring-0 focus:ring-transparent focus:ring-offset-0'
           />
-          <Button type='submit' className='px-20 py-10 rounded-r-full'>
-            <IconSearch /> Buscar
+          <Button
+            type='submit'
+            className='px-12 h-14 py-6 rounded-l-none rounded-r-full cursor-pointer bg-black hover:bg-gray-800 shadow outline-none focus:outline-none active:outline-none w-1/3'
+          >
+            <IconSearch className='mr-1' /> Buscar
           </Button>
         </form>
+
         {feedback && (
           <div className='mb-4 rounded bg-green-100 px-4 py-2 text-sm text-green-800'>
             {feedback}
@@ -139,7 +148,7 @@ export default function Home() {
             {actionError}
           </div>
         )}
-      </Container>
+     
       <div className='mx-auto p-4'>
         <div className='flex items-center justify-between mb-4'>
           <h2 className='text-xl font-bold'>Produtos</h2>
@@ -165,7 +174,9 @@ export default function Home() {
               >
                 <div>
                   <strong className='block text-lg'>{p.name}</strong>
-                  <span className='text-sm text-gray-600 block mb-1'>{p.code}</span>
+                  <span className='text-sm text-gray-600 block mb-1'>
+                    {p.code}
+                  </span>
                   <span className='font-semibold'>
                     {currencyFormatter.format(p.price)}
                   </span>
@@ -175,7 +186,9 @@ export default function Home() {
                     onClick={() => handleAddToCart(p.id)}
                     disabled={addingProductIds[p.id] === true}
                   >
-                    {addingProductIds[p.id] ? "Adicionando..." : "Adicionar ao carrinho"}
+                    {addingProductIds[p.id]
+                      ? "Adicionando..."
+                      : "Adicionar ao carrinho"}
                   </Button>
                 </div>
               </li>
@@ -204,6 +217,7 @@ export default function Home() {
           </div>
         )}
       </div>
+       </Container>
     </>
   );
 }
