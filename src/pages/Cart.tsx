@@ -1,7 +1,11 @@
+import { Container } from "@/components/Container";
+
 export default function Cart() {
   return (
-    <>
-      <div className='mx-auto '>cart</div>
-    </>
+    <Container>
+      <div className='mx-auto '>
+
+      </div>
+    </Container>
   );
 }

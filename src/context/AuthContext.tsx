@@ -1,7 +1,7 @@
 // context/AuthContext.tsx
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import Cookies from "js-cookie";
+import api from "@/api/axios";
 import type { User } from "@/models/User";
 
 type AuthContextType = {
@@ -14,33 +14,18 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// (opcional) mover para src/api/axios.ts para evitar recriar a cada render
-const api = axios.create({ baseURL: "http://localhost:3333/api" });
-
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
-  // interceptor uma vez só
-  useEffect(() => {
-    const interceptorId = api.interceptors.request.use((config) => {
-      const token = Cookies.get("token");
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
-    return () => {
-      api.interceptors.request.eject(interceptorId);
-    };
-  }, []);
-
+  // login: salva token e estado de usuário
   const login = async (email: string, password: string) => {
     const res = await api.post("/auth/login", { email, password });
     Cookies.set("token", res.data.token, { expires: 3 });
     setUser(res.data.user);
   };
 
+  // register: mantém comportamento atual (sem auto-login)
   const register = async (name: string, email: string, password: string) => {
     await api.post("/auth/register", { name, email, password });
   };
@@ -50,6 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(null);
   };
 
+  // refresh inicial
   useEffect(() => {
     const refresh = async () => {
       try {
@@ -69,7 +55,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // garante que authLoading seja false mesmo sem token
   useEffect(() => {
-    // se não houver token e ainda está carregando, finalize
     if (authLoading && !Cookies.get("token")) setAuthLoading(false);
   }, [authLoading]);
 

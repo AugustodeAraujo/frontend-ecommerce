@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { IconShoppingCart } from "@tabler/icons-react";
 
@@ -6,21 +7,23 @@ export default function Navbar() {
 
   return (
     <nav className='w-full flex justify-between p-4 bg-slate-800'>
-      <span className='font-bold text-white'>Mini E-commerce</span>
+      <Link to='/' className='font-bold text-white'>
+        Mini e-commerce
+      </Link>
       {user ? (
         <div className='flex gap-4 items-center'>
           <span className=' font-semibold text-white'>Olá, {user.name}</span>
-          <span>
+          <Link to='/cart' className='relative'>
             <IconShoppingCart className='text-white' />
-          </span>
+          </Link>
           <button onClick={logout} className='text-red-600 text-xs py-1 px-2'>
             Sair
           </button>
         </div>
       ) : (
-        <a href='/login' className='text-white bg-blue-500 px-2 py-1 rounded'>
+        <Link to='/login' className='text-white bg-blue-500 px-2 py-1 rounded'>
           Entrar
-        </a>
+        </Link>
       )}
     </nav>
   );
