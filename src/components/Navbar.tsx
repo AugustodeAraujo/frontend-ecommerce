@@ -1,4 +1,5 @@
 import { useAuth } from "../context/AuthContext";
+import { IconShoppingCart } from "@tabler/icons-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -8,8 +9,11 @@ export default function Navbar() {
       <span className='font-bold text-white'>Mini E-commerce</span>
       {user ? (
         <div className='flex gap-4 items-center'>
-          <span>Olá, {user.name}</span>
-          <button onClick={logout} className='text-red-600'>
+          <span className=' font-semibold text-white'>Olá, {user.name}</span>
+          <span>
+            <IconShoppingCart className='text-white' />
+          </span>
+          <button onClick={logout} className='text-red-600 text-xs py-1 px-2'>
             Sair
           </button>
         </div>
