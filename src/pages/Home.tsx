@@ -138,16 +138,18 @@ export default function Home() {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder='Buscar por peça, modelo, carro, placa...'
-            className='px-8 h-14 rounded-l-full bg-gray-50 shadow border border-gray-200
-               focus:outline-none focus:border-gray-300 focus:ring-0 focus:ring-transparent focus:ring-offset-0'
+            className='px-8 h-20 rounded-l-full bg-gray-50 shadow border border-gray-200
+               focus:outline-none focus:border-gray-300 focus:ring-0 focus:ring-transparent focus:ring-offset-0 text-xl'
           />
           <Button
             type='submit'
-            className='px-12 h-14 py-6 rounded-l-none rounded-r-full cursor-pointer  bg-blue-500 hover:bg-blue-600 shadow outline-none focus:outline-none active:outline-none w-1/4 flex items-center'
+            className='px-12 h-20 py-6 rounded-l-none rounded-r-full cursor-pointer  bg-blue-500 hover:bg-blue-600 shadow outline-none focus:outline-none active:outline-none w-1/4 flex items-center'
           >
             <IconSearch className='mr-1 text-2xl' />
 
-            <span className='text-xl font-mono  uppercase'>Buscar</span>
+            <span className='hidden md:block text-xl font-mono  uppercase'>
+              Buscar
+            </span>
           </Button>
         </form>
 

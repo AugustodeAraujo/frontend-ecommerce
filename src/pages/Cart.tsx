@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { CartItem } from "@/models/CartItem";
 import { useCart } from "@/context/CartContext";
+import { IconTrash } from "@tabler/icons-react";
 
 const currencyFormatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -171,8 +172,8 @@ export default function Cart() {
         )}
 
         {!loading && items.length > 0 && (
-          <div className='space-y-6'>
-            <ul className='space-y-4'>
+          <div className=' bg-gray-100 flex justify-between space-x-4 p-4 mt-10 rounded-xl'>
+            <ul className='space-y-8 w-full'>
               {items.map((item) => {
                 const isUpdating = !!updatingItems[item.id];
                 const isRemoving = !!removingItems[item.id];
@@ -182,7 +183,7 @@ export default function Cart() {
                 return (
                   <li
                     key={item.id}
-                    className='flex flex-col gap-4 rounded-lg border p-4 shadow-sm md:flex-row md:items-center md:justify-between'
+                    className='flex flex-col gap-4  border-b border-gray-300 p-4 md:flex-row md:items-center md:justify-between'
                   >
                     <div>
                       <h2 className='text-lg font-semibold'>
@@ -242,21 +243,11 @@ export default function Cart() {
                       <div className='flex gap-2'>
                         <Button
                           type='button'
-                          variant='outline'
-                          onClick={() =>
-                            void handleManualUpdate(item.id, quantityValue)
-                          }
-                          disabled={isUpdating || isRemoving}
-                        >
-                          Atualizar
-                        </Button>
-                        <Button
-                          type='button'
-                          variant='destructive'
                           onClick={() => void handleRemove(item.id)}
                           disabled={isRemoving || isUpdating}
+                          className='hover:bg-red-600 cursor-pointer'
                         >
-                          {isRemoving ? "Removendo..." : "Remover"}
+                          {isRemoving ? "Removendo..." : <IconTrash />}
                         </Button>
                       </div>
                     </div>
@@ -264,9 +255,9 @@ export default function Cart() {
                 );
               })}
             </ul>
-            <div className='flex items-center justify-between rounded-lg border bg-gray-50 p-4'>
-              <span className='text-lg font-semibold'>Subtotal</span>
-              <span className='text-xl font-bold'>
+            <div className='flex flex-col items-start justify-end rounded-lg  border border-dashed  p-8'>
+              <span className='text-lg texl-left font-semibold'>Subtotal</span>
+              <span className='text-xl font-bold underline underline-offset-8'>
                 {currencyFormatter.format(subtotal)}
               </span>
             </div>

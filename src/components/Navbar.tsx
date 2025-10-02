@@ -18,12 +18,12 @@ export default function Navbar() {
       <header className='fixed w-10/12 bg-black/35 text-[#DEDCDD] lg:w-1/2 mx-auto left-0 right-0 z-50 flex justify-between items-center py-8 lg:py-6 px-7 text-sm uppercase backdrop-blur-2xl rounded-full shadow mt-4'>
         <Link
           to='/'
-          className=' text-sm tracking-widest font-mono text-center px-4 whitespace-nowrap text-white'
+          className=' hidden md:block text-sm tracking-widest font-mono text-center  whitespace-nowrap text-white'
         >
           Mini e-commerce
         </Link>
 
-        <div className='absolute left-1/2 -translate-x-1/2 text-sm tracking-widest font-mono text-center px-4 whitespace-nowrap font-black'>
+        <div className=' text-sm tracking-widest font-mono text-center px-4 whitespace-nowrap font-black'>
           {user && (
             <div className='flex gap-4 items-center'>
               <span className=' font-semibold text-white'>
@@ -34,7 +34,7 @@ export default function Navbar() {
         </div>
 
         {/* DIREITA */}
-        <div className='hidden lg:flex gap-6 relative'>
+        <div className='flex gap-6 relative'>
           {user ? (
             <div className='flex gap-4 items-center'>
               <Link to='/cart' className='relative'>
