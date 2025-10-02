@@ -4,6 +4,7 @@ import { Container } from "@/components/Container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { CartItem } from "@/models/CartItem";
+import { useCart } from "@/context/CartContext";
 
 const currencyFormatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -11,11 +12,17 @@ const currencyFormatter = new Intl.NumberFormat("pt-BR", {
 });
 
 export default function Cart() {
+  const { setHasNewItem } = useCart();
+
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [updatingItems, setUpdatingItems] = useState<Record<string, boolean>>({});
-  const [removingItems, setRemovingItems] = useState<Record<string, boolean>>({});
+  const [updatingItems, setUpdatingItems] = useState<Record<string, boolean>>(
+    {}
+  );
+  const [removingItems, setRemovingItems] = useState<Record<string, boolean>>(
+    {}
+  );
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
   const loadCart = async () => {
@@ -24,10 +31,13 @@ export default function Cart() {
     try {
       const data = await cartService.list();
       setItems(data);
-      const nextQuantities = data.reduce<Record<string, number>>((acc, item) => {
-        acc[item.id] = item.quantity;
-        return acc;
-      }, {});
+      const nextQuantities = data.reduce<Record<string, number>>(
+        (acc, item) => {
+          acc[item.id] = item.quantity;
+          return acc;
+        },
+        {}
+      );
       setQuantities(nextQuantities);
     } catch (err) {
       console.error("Erro ao carregar carrinho", err);
@@ -40,10 +50,14 @@ export default function Cart() {
 
   useEffect(() => {
     void loadCart();
+    setHasNewItem(false);
   }, []);
 
   const subtotal = useMemo(() => {
-    return items.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+    return items.reduce(
+      (acc, item) => acc + item.product.price * item.quantity,
+      0
+    );
   }, [items]);
 
   const handleQuantityChange = (itemId: string, rawValue: number) => {
@@ -64,9 +78,13 @@ export default function Cart() {
     setUpdatingItems((prev) => ({ ...prev, [itemId]: true }));
     setError(null);
     try {
-      const updated = await cartService.updateItem(itemId, { quantity: desired });
+      const updated = await cartService.updateItem(itemId, {
+        quantity: desired,
+      });
       setItems((prev) =>
-        prev.map((item) => (item.id === itemId ? { ...item, ...updated } : item))
+        prev.map((item) =>
+          item.id === itemId ? { ...item, ...updated } : item
+        )
       );
       setQuantities((prev) => ({ ...prev, [itemId]: updated.quantity }));
     } catch (err) {
@@ -83,14 +101,20 @@ export default function Cart() {
   };
 
   const handleIncrement = async (itemId: string) => {
-    const current = quantities[itemId] ?? items.find((item) => item.id === itemId)?.quantity ?? 1;
+    const current =
+      quantities[itemId] ??
+      items.find((item) => item.id === itemId)?.quantity ??
+      1;
     const next = current + 1;
     setQuantities((prev) => ({ ...prev, [itemId]: next }));
     await syncQuantity(itemId, next);
   };
 
   const handleDecrement = async (itemId: string) => {
-    const current = quantities[itemId] ?? items.find((item) => item.id === itemId)?.quantity ?? 1;
+    const current =
+      quantities[itemId] ??
+      items.find((item) => item.id === itemId)?.quantity ??
+      1;
     const next = Math.max(1, current - 1);
     if (next === current) return;
     setQuantities((prev) => ({ ...prev, [itemId]: next }));
@@ -120,7 +144,10 @@ export default function Cart() {
     }
   };
 
-  const handleManualUpdate = async (itemId: string, desiredQuantity: number) => {
+  const handleManualUpdate = async (
+    itemId: string,
+    desiredQuantity: number
+  ) => {
     await syncQuantity(itemId, desiredQuantity);
   };
 
@@ -158,10 +185,15 @@ export default function Cart() {
                     className='flex flex-col gap-4 rounded-lg border p-4 shadow-sm md:flex-row md:items-center md:justify-between'
                   >
                     <div>
-                      <h2 className='text-lg font-semibold'>{item.product.name}</h2>
-                      <p className='text-sm text-gray-600'>{item.product.code}</p>
+                      <h2 className='text-lg font-semibold'>
+                        {item.product.name}
+                      </h2>
                       <p className='text-sm text-gray-600'>
-                        Valor unitário: {currencyFormatter.format(item.product.price)}
+                        {item.product.code}
+                      </p>
+                      <p className='text-sm text-gray-600'>
+                        Valor unitário:{" "}
+                        {currencyFormatter.format(item.product.price)}
                       </p>
                       <p className='text-sm font-semibold text-gray-900'>
                         Total: {currencyFormatter.format(lineTotal)}
@@ -173,7 +205,9 @@ export default function Cart() {
                           type='button'
                           variant='outline'
                           onClick={() => void handleDecrement(item.id)}
-                          disabled={isUpdating || isRemoving || quantityValue <= 1}
+                          disabled={
+                            isUpdating || isRemoving || quantityValue <= 1
+                          }
                         >
                           -
                         </Button>
@@ -182,8 +216,18 @@ export default function Cart() {
                           type='number'
                           min={1}
                           value={quantityValue}
-                          onChange={(e) => handleQuantityChange(item.id, Number(e.target.value))}
-                          onBlur={(e) => void handleManualUpdate(item.id, Number(e.target.value))}
+                          onChange={(e) =>
+                            handleQuantityChange(
+                              item.id,
+                              Number(e.target.value)
+                            )
+                          }
+                          onBlur={(e) =>
+                            void handleManualUpdate(
+                              item.id,
+                              Number(e.target.value)
+                            )
+                          }
                           disabled={isUpdating || isRemoving}
                         />
                         <Button
@@ -199,7 +243,9 @@ export default function Cart() {
                         <Button
                           type='button'
                           variant='outline'
-                          onClick={() => void handleManualUpdate(item.id, quantityValue)}
+                          onClick={() =>
+                            void handleManualUpdate(item.id, quantityValue)
+                          }
                           disabled={isUpdating || isRemoving}
                         >
                           Atualizar

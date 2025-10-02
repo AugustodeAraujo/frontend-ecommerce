@@ -11,6 +11,8 @@ import { IconSearch } from "@tabler/icons-react";
 import { Hero } from "@/components/Hero";
 import ProductCard from "@/components/Product/Card";
 import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useCart } from "@/context/CartContext";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -25,6 +27,7 @@ export default function Home() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const { setHasNewItem } = useCart();
 
   const pageParam = Number(searchParams.get("page"));
   const page = !isNaN(pageParam) && pageParam > 0 ? pageParam : 1;
@@ -76,7 +79,7 @@ export default function Home() {
 
     try {
       await cartService.addItem({ productId, quantity: 1 });
-
+      setHasNewItem(true);
       toast.success("Adicionado ao carrinho");
     } catch (err) {
       console.error("Erro ao adicionar item ao carrinho", err);
@@ -102,10 +105,11 @@ export default function Home() {
     <>
       <Hero
         image={{
-          src: "https://images.pexels.com/photos/209652/pexels-photo-209652.jpeg",
+          src: "https://images.pexels.com/photos/315938/pexels-photo-315938.jpeg",
           alt: "",
         }}
       />
+
       <Container>
         <form onSubmit={handleSearch} className='flex items-center -mt-7 mb-4'>
           <Input
@@ -119,7 +123,7 @@ export default function Home() {
           />
           <Button
             type='submit'
-            className='px-12 h-14 py-6 rounded-l-none rounded-r-full cursor-pointer bg-black hover:bg-gray-800 shadow outline-none focus:outline-none active:outline-none w-1/3'
+            className='px-12 h-14 py-6 rounded-l-none rounded-r-full cursor-pointer bg-black hover:bg-gray-800 shadow outline-none focus:outline-none active:outline-none w-1/4'
           >
             <IconSearch className='mr-1' /> Buscar
           </Button>
@@ -133,7 +137,13 @@ export default function Home() {
             )}
           </div>
 
-          {loading && <div>Carregando...</div>}
+          {loading && (
+            <div className='grid grid-cols-3 gap-8'>
+              {Array.from({ length: 10 }).map((_, i) => (
+                <Skeleton key={i} className='h-[125px] w-full rounded-xl' />
+              ))}
+            </div>
+          )}
           {!loading && products.length === 0 && (
             <p>
               {query

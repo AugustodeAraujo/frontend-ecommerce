@@ -31,7 +31,7 @@ export default function ProductCard({
           {code}
         </span>
         <span className='font-semibold'>R$ {price}</span>
-        <p className='text-sm text-gray-500'>
+        <p className='text-sm text-gray-500 my-2'>
           {description} Aplicações: {vehicleCompatibility}
         </p>
       </div>
