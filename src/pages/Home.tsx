@@ -175,7 +175,7 @@ export default function Home() {
             </div>
           )}
           {!loading && products.length === 0 && (
-            <p>
+            <p className='text-center py-10 text-white text-xl'>
               {query
                 ? "Nenhum produto encontrado para sua busca."
                 : "Não há produtos nesta página."}
