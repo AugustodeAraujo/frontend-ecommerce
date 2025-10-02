@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { IconSearch } from "@tabler/icons-react";
 import { Hero } from "@/components/Hero";
+import ProductCard from "@/components/Product/Card";
 
 const currencyFormatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -148,76 +149,58 @@ export default function Home() {
             {actionError}
           </div>
         )}
-     
-      <div className='mx-auto p-4'>
-        <div className='flex items-center justify-between mb-4'>
-          <h2 className='text-xl font-bold'>Produtos</h2>
-          {productCountLabel && (
-            <span className='text-sm text-gray-600'>{productCountLabel}</span>
-          )}
-        </div>
 
-        {loading && <div>Carregando...</div>}
-        {!loading && products.length === 0 && (
-          <p>
-            {query
-              ? "Nenhum produto encontrado para sua busca."
-              : "Não há produtos nesta página."}
-          </p>
-        )}
-        {!loading && products.length > 0 && (
-          <ul className='space-y-4'>
-            {products.map((p) => (
-              <li
-                key={p.id}
-                className='flex flex-col md:flex-row md:items-center md:justify-between border rounded-lg p-4 shadow-sm gap-4'
-              >
-                <div>
-                  <strong className='block text-lg'>{p.name}</strong>
-                  <span className='text-sm text-gray-600 block mb-1'>
-                    {p.code}
-                  </span>
-                  <span className='font-semibold'>
-                    {currencyFormatter.format(p.price)}
-                  </span>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <Button
-                    onClick={() => handleAddToCart(p.id)}
-                    disabled={addingProductIds[p.id] === true}
-                  >
-                    {addingProductIds[p.id]
-                      ? "Adicionando..."
-                      : "Adicionar ao carrinho"}
-                  </Button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {!loading && meta && meta.totalPages > 1 && (
-          <div className='flex gap-2 mt-4'>
-            {page > 1 && (
-              <button
-                onClick={() => handlePageChange(page - 1)}
-                className='px-3 py-1 border bg-gray-200'
-              >
-                Anterior
-              </button>
-            )}
-            {page < meta.totalPages && (
-              <button
-                onClick={() => handlePageChange(page + 1)}
-                className='px-3 py-1 border bg-gray-200'
-              >
-                Próxima
-              </button>
+        <div className='mx-auto p-4'>
+          <div className='flex items-center justify-between mb-4'>
+            <h2 className='text-xl font-bold'>Produtos</h2>
+            {productCountLabel && (
+              <span className='text-sm text-gray-600'>{productCountLabel}</span>
             )}
           </div>
-        )}
-      </div>
-       </Container>
+
+          {loading && <div>Carregando...</div>}
+          {!loading && products.length === 0 && (
+            <p>
+              {query
+                ? "Nenhum produto encontrado para sua busca."
+                : "Não há produtos nesta página."}
+            </p>
+          )}
+          {!loading && products.length > 0 && (
+            <ul className='grid grid-cols-3 gap-8'>
+              {products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  {...product}
+                  onAddToCart={handleAddToCart}
+                  isAdding={addingProductIds[product.id] === true}
+                />
+              ))}
+            </ul>
+          )}
+
+          {!loading && meta && meta.totalPages > 1 && (
+            <div className='flex gap-2 mt-4'>
+              {page > 1 && (
+                <button
+                  onClick={() => handlePageChange(page - 1)}
+                  className='px-3 py-1 border bg-gray-200'
+                >
+                  Anterior
+                </button>
+              )}
+              {page < meta.totalPages && (
+                <button
+                  onClick={() => handlePageChange(page + 1)}
+                  className='px-3 py-1 border bg-gray-200'
+                >
+                  Próxima
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      </Container>
     </>
   );
 }
