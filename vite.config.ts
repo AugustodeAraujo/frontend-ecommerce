@@ -18,5 +18,9 @@ export default defineConfig(({ mode }) => {
     define: {
       "import.meta.env.BASE_API": JSON.stringify(baseApi),
     },
+    server: {
+      port: Number(env.VITE_PORT) || 5173,
+      host: false,
+    },
   };
 });
