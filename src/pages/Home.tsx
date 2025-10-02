@@ -13,6 +13,7 @@ import ProductCard from "@/components/Product/Card";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/context/CartContext";
+import { PaginationButton } from "@/components/Pagination";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -123,17 +124,25 @@ export default function Home() {
           />
           <Button
             type='submit'
-            className='px-12 h-14 py-6 rounded-l-none rounded-r-full cursor-pointer bg-black hover:bg-gray-800 shadow outline-none focus:outline-none active:outline-none w-1/4'
+            className='px-12 h-14 py-6 rounded-l-none rounded-r-full cursor-pointer  bg-blue-500 hover:bg-blue-900 shadow outline-none focus:outline-none active:outline-none w-1/4 flex items-center'
           >
-            <IconSearch className='mr-1' /> Buscar
+            <IconSearch className='mr-1 text-2xl' />
+
+            <span className='text-xl'>Buscar</span>
           </Button>
         </form>
 
         <div className='mx-auto p-4'>
           <div className='flex items-center justify-between mb-4'>
-            <h2 className='text-xl font-bold'>Produtos</h2>
+            <h2 className='text-xl font-bold text-white'>
+              {query
+                ? `Buscando por: ${query}`
+                : "Encontre as melhores auto peças"}
+            </h2>
             {productCountLabel && (
-              <span className='text-sm text-gray-600'>{productCountLabel}</span>
+              <span className='tracking-widest font-mono text-center px-4 whitespace-nowrap text-white text-sm'>
+                {productCountLabel}
+              </span>
             )}
           </div>
 
@@ -167,20 +176,15 @@ export default function Home() {
           {!loading && meta && meta.totalPages > 1 && (
             <div className='flex gap-2 mt-4'>
               {page > 1 && (
-                <button
-                  onClick={() => handlePageChange(page - 1)}
-                  className='px-3 py-1 border bg-gray-200'
-                >
+                <PaginationButton onClick={() => handlePageChange(page - 1)}>
                   Anterior
-                </button>
+                </PaginationButton>
               )}
+
               {page < meta.totalPages && (
-                <button
-                  onClick={() => handlePageChange(page + 1)}
-                  className='px-3 py-1 border bg-gray-200'
-                >
+                <PaginationButton onClick={() => handlePageChange(page + 1)}>
                   Próxima
-                </button>
+                </PaginationButton>
               )}
             </div>
           )}
