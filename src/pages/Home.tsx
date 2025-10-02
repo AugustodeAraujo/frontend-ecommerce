@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { productService, type PaginatedResponse } from "@/api/productService";
 import { cartService } from "@/api/cartService";
 import type { Product } from "@/models/Product";
@@ -14,8 +19,16 @@ import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/context/CartContext";
 import { PaginationButton } from "@/components/Pagination";
+import { Categories } from "@/components/Categories/Categories";
 
 export default function Home() {
+  const categories = [
+    { name: "Bosch", link: "/?q=Bosch&page=1" },
+    { name: "Fiat", link: "/?q=Fiat&page=1" },
+    { name: "Óleo", link: "/?q=Óleo&page=1" },
+    { name: "Filtro", link: "/?q=Filtro&page=1" },
+  ];
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [meta, setMeta] = useState<PaginatedResponse<Product>["meta"]>();
@@ -111,8 +124,14 @@ export default function Home() {
         }}
       />
 
+      <div className='bg-blue-900'>
+        <Container>
+          <Categories items={categories} />
+        </Container>
+      </div>
+
       <Container>
-        <form onSubmit={handleSearch} className='flex items-center -mt-7 mb-4'>
+        <form onSubmit={handleSearch} className='flex items-center my-8  z-50'>
           <Input
             type='text'
             name='q'
@@ -124,11 +143,11 @@ export default function Home() {
           />
           <Button
             type='submit'
-            className='px-12 h-14 py-6 rounded-l-none rounded-r-full cursor-pointer  bg-blue-500 hover:bg-blue-900 shadow outline-none focus:outline-none active:outline-none w-1/4 flex items-center'
+            className='px-12 h-14 py-6 rounded-l-none rounded-r-full cursor-pointer  bg-blue-500 hover:bg-blue-600 shadow outline-none focus:outline-none active:outline-none w-1/4 flex items-center'
           >
             <IconSearch className='mr-1 text-2xl' />
 
-            <span className='text-xl'>Buscar</span>
+            <span className='text-xl font-mono  uppercase'>Buscar</span>
           </Button>
         </form>
 
@@ -189,6 +208,9 @@ export default function Home() {
             </div>
           )}
         </div>
+      </Container>
+      <Container className='bg-gray-800'>
+        <div>hi</div>
       </Container>
     </>
   );

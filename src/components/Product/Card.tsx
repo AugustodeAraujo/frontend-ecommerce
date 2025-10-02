@@ -20,8 +20,15 @@ export default function ProductCard({
   isAdding = false,
 }: ProductCardProps) {
   return (
-    <div className='flex flex-col  rounded-lg p-4 shadow gap-4 bg-gray-50'>
-      <Skeleton className='h-[125px] w-full rounded-xl' />
+    <div
+      className='
+    flex flex-col rounded-lg p-4 shadow gap-4 bg-gray-50
+    border border-gray-200
+    transition-all duration-300 ease-out
+    hover:border-indigo-400 hover:shadow-[0_0_0_2px_rgba(99,102,241,0.3)]
+  '
+    >
+      <Skeleton className='h-[200px] w-full rounded-xl bg-gray-300' />
       <div>
         <strong className='block text-lg'>
           {name}{" "}

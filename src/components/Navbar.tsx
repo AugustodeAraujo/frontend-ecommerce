@@ -16,9 +16,12 @@ export default function Navbar() {
   return (
     <>
       <header className='fixed w-10/12 bg-black/35 text-[#DEDCDD] lg:w-1/2 mx-auto left-0 right-0 z-50 flex justify-between items-center py-8 lg:py-6 px-7 text-sm uppercase backdrop-blur-2xl rounded-full shadow mt-4'>
-        <div className=' text-sm tracking-widest font-mono text-center px-4 whitespace-nowrap text-white'>
-          Mini e-commerce Co.
-        </div>
+        <Link
+          to='/'
+          className=' text-sm tracking-widest font-mono text-center px-4 whitespace-nowrap text-white'
+        >
+          Mini e-commerce
+        </Link>
 
         <div className='absolute left-1/2 -translate-x-1/2 text-sm tracking-widest font-mono text-center px-4 whitespace-nowrap font-black'>
           {user && (
@@ -51,7 +54,7 @@ export default function Navbar() {
           ) : (
             <Link
               to='/login'
-              className='text-white bg-blue-500 px-2 py-1 rounded'
+              className='text-white bg-blue-500 hover:bg-blue-600 px-8 py-1 rounded-full font-mono  tracking-widest '
             >
               Entrar
             </Link>

@@ -29,44 +29,47 @@ export default function Login() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className='p-4 max-w-sm mx-auto flex flex-col gap-3'
-    >
-      <div>
-        <input
-          type='email'
-          placeholder='Email'
-          {...register("email")}
-          className='border p-2 w-full'
-        />
-        {errors.email && (
-          <p className='text-red-500 text-sm'>{errors.email.message}</p>
-        )}
-      </div>
-
-      <div>
-        <input
-          type='password'
-          placeholder='Senha'
-          {...register("password")}
-          className='border p-2 w-full'
-        />
-        {errors.password && (
-          <p className='text-red-500 text-sm'>{errors.password.message}</p>
-        )}
-      </div>
-
-      {/* erro da API */}
-      {errorMessage && <p className='text-red-600 text-sm'>{errorMessage}</p>}
-
-      <button
-        type='submit'
-        disabled={isSubmitting}
-        className='bg-blue-500 text-white p-2 disabled:opacity-50'
+    <div className='flex items-center justify-center min-h-screen '>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className='p-6 max-w-sm w-full bg-black shadow rounded flex flex-col gap-3'
       >
-        {isSubmitting ? "Entrando..." : "Entrar"}
-      </button>
-    </form>
+        <div>
+           <label >Login</label>
+          <input
+            type='email'
+            placeholder='Email'
+            {...register("email")}
+            className='border p-2 w-full'
+          />
+          {errors.email && (
+            <p className='text-red-500 text-sm'>{errors.email.message}</p>
+          )}
+        </div>
+
+        <div>
+          <input
+            type='password'
+            placeholder='Senha'
+            {...register("password")}
+            className='border p-2 w-full'
+          />
+          {errors.password && (
+            <p className='text-red-500 text-sm'>{errors.password.message}</p>
+          )}
+        </div>
+
+        {/* erro da API */}
+        {errorMessage && <p className='text-red-600 text-sm'>{errorMessage}</p>}
+
+        <button
+          type='submit'
+          disabled={isSubmitting}
+          className='bg-blue-500 text-white p-2 rounded disabled:opacity-50'
+        >
+          {isSubmitting ? "Entrando..." : "Entrar"}
+        </button>
+      </form>
+    </div>
   );
 }
