@@ -10,19 +10,14 @@ import { useAuth } from "@/context/AuthContext";
 import { IconSearch } from "@tabler/icons-react";
 import { Hero } from "@/components/Hero";
 import ProductCard from "@/components/Product/Card";
-
-const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-});
+import { toast } from "sonner";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [meta, setMeta] = useState<PaginatedResponse<Product>["meta"]>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [feedback, setFeedback] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
+
   const [addingProductIds, setAddingProductIds] = useState<
     Record<string, true>
   >({});
@@ -60,15 +55,6 @@ export default function Home() {
     fetchData();
   }, [page, query]);
 
-  useEffect(() => {
-    if (!feedback && !actionError) return;
-    const timeout = setTimeout(() => {
-      setFeedback(null);
-      setActionError(null);
-    }, 3000);
-    return () => clearTimeout(timeout);
-  }, [feedback, actionError]);
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setSearchParams({ q: searchInput, page: "1" });
@@ -86,16 +72,16 @@ export default function Home() {
       return;
     }
 
-    setFeedback(null);
-    setActionError(null);
     setAddingProductIds((prev) => ({ ...prev, [productId]: true }));
 
     try {
       await cartService.addItem({ productId, quantity: 1 });
-      setFeedback("Produto adicionado ao carrinho.");
+
+      toast.success("Adicionado ao carrinho");
     } catch (err) {
       console.error("Erro ao adicionar item ao carrinho", err);
-      setActionError("Não foi possível adicionar este produto ao carrinho.");
+
+      toast.error("Não foi possível adicionar este produto ao carrinho.");
     } finally {
       setAddingProductIds((prev) => {
         const nextState = { ...prev };
@@ -138,17 +124,6 @@ export default function Home() {
             <IconSearch className='mr-1' /> Buscar
           </Button>
         </form>
-
-        {feedback && (
-          <div className='mb-4 rounded bg-green-100 px-4 py-2 text-sm text-green-800'>
-            {feedback}
-          </div>
-        )}
-        {actionError && (
-          <div className='mb-4 rounded bg-red-100 px-4 py-2 text-sm text-red-700'>
-            {actionError}
-          </div>
-        )}
 
         <div className='mx-auto p-4'>
           <div className='flex items-center justify-between mb-4'>
