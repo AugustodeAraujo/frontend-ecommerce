@@ -1,6 +1,7 @@
 // components/Product/Card.tsx
 import type { Product } from "@/models/Product";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "../ui/skeleton";
 
 type ProductCardProps = Product & {
   onAddToCart?: (id: string) => void;
@@ -20,6 +21,7 @@ export default function ProductCard({
 }: ProductCardProps) {
   return (
     <div className='flex flex-col  rounded-lg p-4 shadow gap-4 bg-gray-50'>
+      <Skeleton className='h-[125px] w-full rounded-xl' />
       <div>
         <strong className='block text-lg'>
           {name}{" "}
@@ -35,7 +37,11 @@ export default function ProductCard({
       </div>
 
       <div className='flex items-center gap-2'>
-        <Button onClick={() => onAddToCart?.(id)} disabled={isAdding}>
+        <Button
+          onClick={() => onAddToCart?.(id)}
+          disabled={isAdding}
+          className='hover:scale-105 transition-transform cursor-pointer'
+        >
           {isAdding ? "Adicionando..." : "Adicionar ao carrinho"}
         </Button>
       </div>
